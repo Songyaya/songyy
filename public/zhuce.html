@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script type="text/javascript" src="javascripts/jquery-1.11.3.min.js"></script>
+		<style>
+			input{margin-bottom: 10px;}
+		</style>
+	</head>
+
+	<body>
+		用户名：<input type="text" placeholder="输入用户名" id="username" /><br />
+		 姓名：<input type="text" placeholder="输入姓名" id="uname" /><br /> 
+		 密码：<input type="password" placeholder="输入密码" id="pwd" /><br />
+		 性别：<input type="text" placeholder="输入性别" id="sex" /><br />
+		 年龄：<input type="text" placeholder="输入年龄" id="age" /><br />
+		 邮箱：<input type="text" placeholder="输入邮箱" id="email" /><br />
+		 手机：<input type="number" placeholder="输入手机号" id="tel" />
+		<button id="submit">注册</button>
+	</body>
+	<script>
+		$('#submit').click(function() {
+			$.ajax({
+				type: "post",
+				url: "http://localhost:2799/list/regist",
+				data: {
+					"username": $("#username").val(),
+					"uname": $("#uname").val(),
+					"pwd": $("#pwd").val(),
+					"sex":$("#sex").val(),
+					"age":$("#age").val(),
+					"email": $("#email").val(),
+					"tel": $("#tel").val()
+				},
+				success: function(e) {
+					if(e.flag == 1) {
+						alert("登录成功")
+					} else if(e.flag == 1){
+						alert("失败")
+					}
+				}
+			});
+		})
+	</script>
+
+</html>

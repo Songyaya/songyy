@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="js/jquery-1.10.2.min.js"></script>
+	</head>
+
+	<body>
+		<input type="text" id="input" />
+		<button id="btn">搜索</button>
+		<div class="box">
+		</div>
+		<span>共：<b id="page"></b>页</span>
+		<button id="haha">上一页</button>
+		<input type="button" id="submit" value="下一页" />
+		<span>第：<b id="pageNum"></b>页</span>
+		<!--<span>共：<b id="total"></b>条</span>-->
+
+	</body>
+	<script type="text/javascript">
+		window.onload = function() {
+				//列表
+				var pageNum = 1
+
+				function ajax(pageNum) {
+					$.ajax({
+						type: "get",
+						url: "http://localhost:2799/list/page",
+						data: {
+							'pageNum': pageNum
+						},
+						success: function(e) {
+							//						debugger
+							console.log(e)
+
+							for(var i = 0; i < e.list.length; i++) {
+								var html = ''
+								html += 'name:<li>' + e.list[i].name + '</li>'
+								$('.box').append(html)
+								$('#page').html(e.page)
+								$('#pageNum').html(pageNum)
+								//$('#total').html(e.total)
+							}
+						}
+					});
+				}
+				ajax(pageNum)
+				submit.onclick = function() {
+					$('.box').empty()
+					pageNum++
+					ajax(pageNum)
+
+				}
+				haha.onclick = function() {
+					$('.box').empty()
+					if(pageNum == 0) {
+						submit.disabled = false
+					}
+					pageNum--
+					ajax(pageNum)
+
+				}
+			}
+	</script>
+
+</html>

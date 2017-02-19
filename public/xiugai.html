@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script type="text/javascript" src="javascripts/jquery-1.11.3.min.js"></script>
+	</head>
+	<style>
+		input{margin-bottom: 10px;}
+		button{margin-left: 180px;}
+	</style>
+	<body>
+		用户：<input type="text" id="username"/><br />
+		姓名：<input type="text" id="uname"/><br />
+		密码：<input type="text" id="pwd"/><br />
+		性别：<input type="text" id="sex"/><br />
+		年龄：<input type="text" id="age"/><br />
+		号码：<input type="text" id="tel"/><br />
+		邮箱：<input type="text" id="email"/><br />
+		<button id="submit">提交</button>
+	</body>
+		<script>
+		var id = window.location.href.split('=')[1]
+		alert(id)
+		$.ajax({
+			type: "get",
+			url: "http://localhost:2799/list/detail?id="+id,
+			success: function(e) {
+				if(e[0].sex == 1) {
+					e[0].sex = "男"
+				} else if(e[0].sex == 2) {
+					e[0].sex = "女"
+				}
+				console.log(e);
+				if(e!=null){
+					 $("#username").val(e[0].username),
+					 $("#uname").val(e[0].uname),
+					 $("#pwd").val(e[0].pwd),
+					 $("#sex").val(e[0].sex),
+					 $("#age").val(e[0].age),
+					 $("#tel").val(e[0].tel),
+					 $("#email").val(e[0].email)
+				}
+				
+
+			}
+		});
+		$('#submit').click(function(){
+			$.ajax({
+				type:"post",
+				url:"http://localhost:2799/list/tijiao",
+				data:{
+					"uid": id,
+					"username": $("#username").val(),
+					"uname": $("#uname").val(),
+					"pwd": $("#pwd").val(),
+					"sex":$("#sex").val(),
+					"age":$("#age").val(),
+					"tel": $("#tel").val(),
+					"email": $("#email").val()
+				},
+				success:function(e){
+					alert()
+					console.log(e);
+					window.location.href="list.html"
+					/*if(e.flag == 1) {
+						//alert("登录成功")
+						
+					} else if(e.flag == 1){
+						alert("失败")
+					}*/
+				}
+			});
+		})
+	</script>
+</html>

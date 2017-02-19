@@ -1,0 +1,119 @@
+<!DOCTYPE html >
+<html >
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="keywords" content="ajax分页,jquery,php" />
+    <meta name="description" content="" />
+    <title>分页显示数据</title>
+    <style type="text/css">
+        #list{width:680px; height:330px; margin:2px auto; position:relative}
+        #list ul li{float:left;width:220px; height:260px; margin:2px}
+        #list ul li img{width:220px; height:220px}
+        #list ul li p{line-height:22px}
+        #pagecount{width:500px; margin:10px auto; text-align:center}
+        #pagecount span{margin:4px; font-size:14px}
+        #list ul li#loading{width:120px; height:32px; border:1px solid #d3d3d3;
+            position:absolute; top:35%; left:42%; text-align:center; background:#f7f7f7
+        url(img/loading.gif) no-repeat 8px 8px;-moz-box-shadow:1px 1px 2px rgba(0,0,0,.2);
+            -webkit-box-shadow:1px 1px 2px rgba(0,0,0,.2); box-shadow:1px 1px 2px rgba(0,0,0,.2);} </style>
+   <script src="js/jquery-1.10.2.min.js"></script>
+   <script type="text/javascript">
+        var curPage = 1; //当前页码
+        var total,pageSize,page;
+        //获取数据
+        function getData(syy){
+            $.ajax({
+                type: 'get',
+                url: 'http://localhost:2799/list/page',
+                data: {'pageNum':syy-1},
+                dataType:'json',
+                beforeSend:function(){
+                    $("#list ul").append("<li id='loading'>loading...</li>");
+                },
+                success:function(json){
+                    console.log(json)
+                    console.log(json);
+                    $("#list ul").empty();
+                    total = json.total; //总记录数
+                    pageSize = json.pageSize; //每页显示条数
+                    curPage = syy; //当前页
+                    page = json.page; //总页数
+                    var li = "";
+                    var list = json.list;
+                    $.each(list,function(index,array){ //遍历json数据列
+                        li += "<li>"+array['uname']+"</li>";
+                    });
+                    $("#list ul").append(li);
+                },
+                complete:function(){ //生成分页条
+                    console.log('complete')
+                    getPageBar();
+                },
+                error:function(){
+                    alert("数据加载失败");
+                }
+            });
+        }
+
+        //获取分页条
+        function getPageBar(){
+            //页码大于最大页数
+            if(curPage>page) curPage=page;
+            //页码小于1
+            if(curPage<1) curPage=1;
+            pageStr = "<span>共"+total+"条</span><span>"+curPage+"/"+page+"</span>";
+
+            //如果是第一页
+            if(curPage==1){
+                pageStr += "<span>首页</span><span>上一页</span>";
+            }else{
+                pageStr += "<span><a href='javascript:void(0)' onclick='fn(1)'>首页</a></span><span><a href='javascript:void(0)' onclick='fn("+(curPage-1)+")'>上一页</a></span>";
+            }
+
+            //如果是最后页
+            if(curPage>=page){
+                pageStr += "<span>下一页</span><span>尾页</span>";
+            }else{
+                pageStr += "<span><a href='javascript:void(0)' onclick='fn("+(parseInt(curPage)+1)+")'>下一页</a></span><span><a href='javascript:void(0)' onclick='fn("+page+")'>尾页</a></span>";
+            }
+
+            $("#pagecount").html(pageStr);
+        }
+
+        $(function(){
+            getData(1);
+//            $("#pagecount span a").on('click',function(){
+//                alert('333')
+//                var rel = $(this).attr("rel");
+//                if(rel){
+//                    getData(rel);
+//                }
+//            });
+
+        });
+
+        function fn(syy){
+            if(syy){
+                getData(syy);
+            }
+        }
+    </script>
+</head>
+
+<body>
+<div id="header">
+    <div id="logo"><h1></h1></div>
+</div>
+
+<div id="main">
+    <h2 class="top_title">信息列表</h2>
+    <div id="list">
+        <ul></ul>
+    </div>
+    <div id="pagecount"></div>
+</div>
+<div id="footer">
+
+</div>
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="javascripts/jquery-1.11.3.min.js"></script>
+		<style>
+			ul li {
+				list-style: none;
+				margin-right: 20;
+			}
+		</style>
+	</head>
+
+	<body>
+		<input type="text" id="input"/>
+		<button id="btn">搜索</button>
+		<ul></ul>
+		<script>
+		//list
+			$.ajax({
+				type: "get",
+				url: "http://localhost:2799/list/list",
+				success: function(e) {
+					//debugger
+					if(e) {
+						for(var i = 0; i < e.length; i++) {
+							if(e[i].sex == 1) {
+								e[i].sex = "男"
+							} else if(e[i].sex == 2) {
+								e[i].sex = "女"
+							}
+							html = '<li>' + e[i].uid + '</li><li>' + e[i].username + '</li><li>' + e[i].uname + '</li><li>' + e[i].sex + '</li><li>' + e[i].age + '</li><li>' + e[i].tel + '</li><li>' + e[i].email + '</li><a href="xiangqing.html?id='+e[i].uid+'">详情</a><a href="xiugai.html?id='+e[i].uid+'">修改</a><sb id="'+e[i].uid+'">删除</sb>',
+								$('ul').append(html)
+						}
+					}
+				}
+			});
+		    //delete
+			$('body').delegate('sb','click',function(){
+				var id=$(this).attr('id');
+				$.ajax({
+					type:"get",
+					url:"http://localhost:2799/list/del?id="+id,
+					success: function(e) {
+						window.location.reload()
+					}
+				});
+			})
+			//搜索
+			$('#btn').click(function(){
+				$('ul').empty()
+				$.ajax({
+					type:"get",
+					url:"http://localhost:2799/list/search",
+					data:{
+						cont:$('#input').val()
+					},
+					success:function(e){
+						console.log(e);
+						if(e) {
+						for(var i = 0; i < e.length; i++) {
+							if(e[i].sex == 1) {
+								e[i].sex = "男"
+							} else if(e[i].sex == 2) {
+								e[i].sex = "女"
+							}
+							html = '<li>' + e[i].uid + '</li><li>' + e[i].username + '</li><li>' + e[i].uname + '</li><li>' + e[i].sex + '</li><li>' + e[i].age + '</li><li>' + e[i].tel + '</li><li>' + e[i].email + '</li><a href="xiangqing.html?id='+e[i].uid+'">详情</a><a href="xiugai.html?id='+e[i].uid+'">修改</a><sb id="'+e[i].uid+'">删除</sb>',
+								$('ul').append(html)
+						}
+					}
+					}
+				});
+			
+			})	
+		</script>
+	</body>
+
+</html>

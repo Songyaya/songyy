@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script type="text/javascript" src="javascripts/jquery-1.11.3.min.js"></script>
+	</head>
+
+	<body>
+		<div id="box"></div>
+
+	</body>
+	<script>
+		var id = window.location.href.split('=')[1]
+		alert(id)
+		$.ajax({
+			type: "get",
+			url: "http://localhost:2799/list/detail?id=" + id,
+			success: function(e) {
+				if(e[0].sex == 1) {
+					e[0].sex = "男"
+				} else if(e[0].sex == 2) {
+					e[0].sex = "女"
+				}
+				console.log(e);
+				//debugger
+				var html = '';
+				html = '用户名：<span>' + e[0].username + '</span><br />姓名：<span>' + e[0].uname + '</span><br />密码：<span>' + e[0].pwd + '</span><br />年龄：<span>' + e[0].age + '</span><br />性别：<span>' + e[0].sex + '</span><br />电话：<span>' + e[0].tel + '</span><br />邮箱：<span>' + e[0].email + '</span>';
+				$('#box').append(html)
+
+			}
+		});
+	</script>
+
+</html>
